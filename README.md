@@ -215,7 +215,7 @@
 
 -   Learned the behavior of **MQTT publish and subscribe**
     
--   Explained the system architecture with reference to the image file **`iot_architecture_diagram.svg`**
+-   Explained the system architecture with reference to the image file ![IoT Architecture Diagram](iot_architecture_diagram.svg)
     
 ## 1. Host Machine (User / Developer Machine)
 
