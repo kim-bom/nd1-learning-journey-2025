@@ -207,3 +207,128 @@
 -   Plotting in R is similar to Photoshop layers, where multiple layers combine into a final graph.
     
 -   **R Markdown** files can be executed and displayed block-by-block, similar to Jupyter Notebook.
+
+
+----------
+
+### **13 Dec 2025**
+
+-   Learned the behavior of **MQTT publish and subscribe**
+    
+-   Explained the system architecture with reference to the image file **`iot_architecture_diagram.svg`**
+    
+## 1. Host Machine (User / Developer Machine)
+
+### 1.1 Components
+
+**1.1.1 Python Scripts – Student Code**  
+→ Used for testing, sending data, or calling APIs
+
+**1.1.2 Web Browser – User Interface**  
+→ Users access dashboards and APIs through a web browser
+
+### 1.2 Access
+
+**1.2.1** Users access the system through **a single port only**  
+→ **HTTP : 8888 (via Nginx)**
+
+## 2. Docker Network (iot-network)
+
+All services run within the same Docker network.  
+They communicate using **internal ports** and are **not directly exposed to the internet**.
+
+## 3. Access Layer (Reverse Proxy)
+
+### 3.1 Nginx – Port 8888
+
+**Responsibilities**
+
+-   **3.1.1** Acts as a reverse proxy
+    
+-   **3.1.2** Routes user requests to internal services
+    
+## 4. Application Layer (Logic / Processing)
+
+### 4.1 IoT Simulator – Data Generator
+
+-   **4.1.1** Simulates sensors / devices
+    
+-   **4.1.2** Publishes data via MQTT
+    
+### 4.2 Node-RED – Port 1880
+
+**Main responsibilities**
+
+-   **4.2.1** MQTT subscribe / publish
+    
+-   **4.2.2** Data flow and logic processing
+    
+-   **4.2.3** Writes data to InfluxDB
+    
+-   **4.2.4** Provides dashboards (FlowFuse)
+    
+### 4.3 Flask API – Port 5000
+
+**Responsibilities**
+
+-   **4.3.1** REST API
+    
+-   **4.3.2** Read / write data from InfluxDB
+    
+-   **4.3.3** Provides APIs for frontend applications and Grafana
+    
+**Conceptual roles**
+
+-   **Node-RED** = Flow-based processing
+    
+-   **Flask** = Programmatic API / integration
+    
+## 5. Messaging Layer
+
+### 5.1 EMQX MQTT Broker – Port 1883
+
+**Responsibilities**
+
+-   **5.1.1** Message routing (Pub/Sub)
+    
+-   **5.1.2** Decouples producers from consumers
+    
+**Usage**
+
+-   **5.1.1** IoT Simulator → Publish
+    
+-   **5.1.2** Node-RED → Subscribe / Publish
+    
+-   **5.1.3** Supports large-scale device expansion
+    
+## 6. Data Layer
+
+### 6.1 InfluxDB – Port 8086
+
+**Database type**
+
+-   **6.1.1** Time-series database
+    
+**Responsibilities**
+
+-   **6.1.1** Stores sensor data over time
+    
+-   **6.1.2** Supports time-range queries
+    
+-   **6.1.3** Integrates well with Grafana
+    
+## 7. Visualization Layer
+
+### 7.1 Grafana – Port 3000
+
+**Responsibilities**
+
+-   **7.1.1** Displays dashboards
+    
+-   **7.1.2** Queries data from InfluxDB
+    
+-   **7.1.3** Calls APIs via Flask
+    
+**Access**
+
+-   **7.1.1** Accessed only through the Nginx proxy (not directly exposed)
